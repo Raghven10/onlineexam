@@ -1,0 +1,122 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Subjects {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">  
+          {% if msg %}
+
+         <div class="alert alert-success alert-dismissible fade show col-4 float-right" role="alert">
+            <strong>{{msg}}</strong> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+
+          {% endif %}
+          
+          <div class="row align-items-center py-4">            
+           <form action="#" method="POST">         
+             {% csrf_token %}   
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject_code">Subject_Code</label>
+                    <input type="text" id="subject_code" name="subject_code" class="form-control" placeholder="subject_code">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject_name">Subject_Name</label>
+                    <input type="text" id="subject_name" name="subject_name" class="form-control" placeholder="subject_name">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                   <div class="form-group">
+                    <label class="form-control-label" for="subject_description">Subject Description</label>
+                    <input type="text" id="subject_description" name="subject_description" class="form-control" placeholder="subject_description">
+                  </div>
+                </div>
+
+               <input type="text" id="lastUpdatedBy" name="lastUpdatedBy" value="{{request.user.id}}" hidden />
+               
+                <div class="col-lg-3">
+                 <label class="form-control-label">Add New Subject</label>
+                 <button type="submit" class="btn btn-success">+ Add New</button>
+                </div> 
+              </div>            
+          </form>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+             <!-- Content area -->           
+
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Sl No</th>
+                    <th scope="col">Subject Code</th>
+                    <th scope="col">Subject Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Last Updated</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in subjects%}
+                  <tr>
+                    <th scope="row">
+                     {{forloop.counter}}
+                    </th>
+                    <td>
+                      {{c.subject_code}}
+                    </td>
+                    <td>
+                      {{c.subject_name}}
+                    </td>
+                    <td>
+                      {{c.subject_description}}
+                    </td>
+                    <td>
+                      {{c.lastUpdatedOn}}
+                    </td>
+                    <td>
+                       <a class="btn btn-sm btn-icon-only text-danger" href="{% url 'delete_subject' c.id %}" role="button"
+                                        aria-expanded="false">
+                        <i class="fas fa-trash"></i>
+                      </a>   
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+             <!-- Content area ends here-->
+          </div>
+        </div>
+      </div>
+
+      {% include "includes/footer.html" %}
+      
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+$(".alert").alert('close');
+{% endblock javascripts %}

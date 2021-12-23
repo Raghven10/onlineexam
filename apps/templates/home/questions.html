@@ -1,0 +1,130 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} questions {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              <h6 class="h2 text-white d-inline-block mb-0">Questions</h6>
+              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                  <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Questions Bank</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+              <a href="{%url 'new_question'%}" class="btn btn-sm btn-neutral">+ New</a>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+             <!-- Content area -->
+       
+          {% for q in questions %}
+          <div class="row">
+            <div class="col-xl-12 col-md-12">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h3 class="card-title text-uppercase text-danger mb-0">Q{{forloop.counter}}. {{q.question}}</h3>
+                      <p class="card-title text-uppercase text-muted text-right mb-2">{{q.category.category_name}} - {{q.exam_ref}}  </p>
+                      
+                      <div class="row">
+                        <div class="col-lg-6 font-weight-bold mb-0">A. {{q.option1}}</div>
+                        <div class="col-lg-6 font-weight-bold mb-1">B. {{q.option2}}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6 font-weight-bold mb-0">C. {{q.option3}}</div>
+                        <div class="col-lg-6 font-weight-bold mb-2">D. {{q.option4}}</div>
+                      </div>
+                                           
+                      <div class="row">             
+                        <div class="col-lg-8" id="answer_div_{{forloop.counter}}" hidden>
+                          <div class="form-group">
+                            <label class="form-control-label text-green" for="correct_answer">Correct Answer : {{q.correct_answer}}</label>
+                          </div>
+                        </div>
+                        <div class="col-lg-2 float-right">
+                          <div class="form-group">
+                            <button class="btn btn-primary btn-sm btn-block" id="view_btn_{{forloop.counter}}" onclick="view({{forloop.counter}})">View Answer</button>
+                          </div>
+                        </div>
+                        <div class="col-lg-2 float-right">
+                          <div class="form-group">
+                            <button class="btn btn-warning btn-sm btn-block" id="hide_btn_{{forloop.counter}}" hidden onclick="hide({{forloop.counter}})">Hide Answer</button>
+                          </div>
+                        </div>
+                      </div>
+                    {%if q.explaination %}
+                    <div class="row" id="explaination_{{forloop.counter}}" hidden>             
+                      <div class="col">
+                        <div class="form-group text-green">
+                          <label class="form-control-label" for="correct_answer">Answer Explaination: </label>
+                          <textarea rows="2" class="form-control" placeholder="explaination">{{q.explaination}}</textarea>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    </div>                   
+                  </div>                 
+                </div>
+              </div>
+            </div>   
+          
+          </div>
+          {% endfor %}
+
+             <!-- Content area ends here-->
+          </div>
+        </div>
+      </div>
+
+      {% include "includes/footer.html" %}
+      
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script>
+  function view(id){
+    var id = id;
+    //alert("#answer_div_"+id+"");
+    
+    $("#answer_div_"+id+"").prop('hidden', false);
+    $("#explaination_"+id+"").prop('hidden', false);
+    $("#hide_btn_"+id+"").prop('hidden', false);
+    $("#view_btn_"+id+"").prop('hidden', true);
+
+  };
+
+  function hide(id){
+    //var id = id;
+    $("#answer_div_"+id+"").prop('hidden', true);
+    $("#view_btn_"+id+"").prop('hidden', false);
+    $("#explaination_"+id+"").prop('hidden', true);
+    $("#hide_btn_"+id+"").prop('hidden', true);
+  };
+
+
+</script>
+
+
+{% endblock javascripts %}

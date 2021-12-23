@@ -1,0 +1,237 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Add Question {% endblock title %}
+
+{% block content %}
+
+<!-- Page content -->
+<div class="header pb-3"></div>
+<div class="container-fluid mt--20 pb-10">  
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Add New Question</h3>
+            </div>
+            <div class="col-4 text-right">
+              <a href="{%url 'questions'%}" class="btn btn-sm btn-primary">Back</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="#" method="POST">
+            {% csrf_token %}   
+            <h6 class="heading-small text-muted mb-4">Add Question Details</h6> 
+              <div class="row">   
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject">Category</label>
+                    <select type="text" id="category"  name="category" class="form-control"> 
+                      {%for c in categories%}
+                      <option value="{{c.id}}">{{c.category_name}}</option>
+                      {% endfor %}
+                    </select>                       
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                  <label class="form-control-label" for="add">Not listed? Add new.</label>
+                    <a class="btn btn-sm btn-icon-only btn-success" id="add" 
+                    href="{% url 'categories' %}" role="button" aria-expanded="true">
+                      <i class="ni ni-fat-add"></i>
+                    </a>   
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject">Exam Reference (Previously asked in)</label>
+                    <input type="text" class="form-control" name="exam_ref" id="exam_ref" placeholder="Exam Reference (Previously asked in)" />                 
+                  </div>
+                </div>
+                
+              </div>
+            <div class="row">   
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject">Select Subject</label>
+                    <select type="text" id="subject" class="form-control" onchange="loadSections()">
+                      {%for s in subjects%}
+                      <option value="{{s.id}}">{{s.subject_name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="section">Select Section</label>
+                    <select type="text" id="section" class="form-control" onchange="loadTopics()" disabled>
+                     <option></option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <div class="row">   
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="subject">Select Topic</label>
+                    <select type="text" id="topic" name="topic" class="form-control" disabled>
+                      <option></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="section">Select Question Type</label>
+                    <select type="text" id="question_type" name="question_type" class="form-control" onchange="questionType()">
+                     <option value="DESCR">DESCRIPTIVE TYPE</option>
+                     <option value="MCQ">MULTIPLE CHOICE</option>                     
+                     <option value="FILL_IN_BLANKS">FILL IN THE BLANKS</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="row">             
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-control-label" for="question">Question</label>
+                  <textarea rows="2" id="question" name="question" class="form-control" placeholder="Write Question here ..."></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">             
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-control-label" for="correct_answer">Correct Answer</label>
+                  <textarea rows="2" id="correct_answer" name="correct_answer" class="form-control" placeholder="correct_answer"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">             
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-control-label" for="correct_answer">Answer Explaination</label>
+                  <textarea rows="4" id="explaination" name="explaination" class="form-control" placeholder="explaination"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="row1" hidden>   
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="option1">Option-1</label>
+                    <input type="text" id="option1" name = "option1" class="form-control" placeholder="option1" disabled>
+                  </div>
+                </div>
+                 <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="option2">Option-2</label>
+                    <input type="text" id="option2" name="option2" class="form-control" placeholder="option2" disabled>
+                  </div>
+                </div>
+            </div>
+            <div class="row" id="row2" hidden>   
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="option3">Option-3</label>
+                    <input type="text" id="option3" name = "option3" class="form-control" placeholder="option3" disabled>
+                  </div>
+                </div>
+                 <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="option4">Option-4</label>
+                    <input type="text" id="option4" name="option4" class="form-control" placeholder="option4" disabled>
+                  </div>
+                </div>
+            </div>
+            <input type="text" id="lastUpdatedBy" name="lastUpdatedBy" value="{{requests.user.id}}" hidden />
+            <div class="row">
+              <div class="col">
+                <div class="form-group">                 
+                 <button type="submit" class="btn btn-block btn-success">Save</button>
+                </div>
+              </div>
+            </div> 
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+    function loadSections() {
+        console.log($("#subject").val());
+        var id = $("#subject").val();        
+        $.ajax({
+            url: `get_sections/${id}`,
+            dataType: 'json',
+            success: function (data) {
+                $("#section").prop('disabled', false);
+                
+                let html_data = '<option value="">Select Section</option>';
+
+                console.log(data);
+                if (typeof (data) === "string") {
+                    data = JSON.parse(data)
+                }
+                data.forEach(function (data) {
+                    html_data += `<option value="${data.pk}">${data.fields.section_code}</option>`
+                });
+                $("#section").html(html_data);
+
+            }
+        });
+    };
+
+    function loadTopics() {
+        console.log($("#section").val());
+        var id = $("#section").val();
+        
+        $.ajax({
+            url: `get_topics/${id}`,
+            dataType: 'json',
+            success: function (data) {
+                $("#topic").prop('disabled', false);
+                
+                let html_data = '<option value="">Select Topic</option>';
+
+                console.log(data);
+                if (typeof (data) === "string") {
+                    data = JSON.parse(data)
+                }
+                data.forEach(function (data) {
+                    html_data += `<option value="${data.pk}">${data.fields.topic_name}</option>`
+                });
+                $("#topic").html(html_data);
+
+            }
+        });
+    };
+
+    function questionType(){
+      
+      var id = $("#question_type").val();
+      
+      if(id=="MCQ"){
+        $("#option1, #option2, #option3, #option4").prop('disabled', false);
+        $("#row1, #row2").prop('hidden', false);
+      }
+      else{
+        $("#option1, #option2, #option3, #option4").prop('disabled', true);
+        $("#row1, #row2").prop('hidden', true);
+      };
+
+    };
+
+$(".alert").alert('close');
+
+</script>
+
+{% endblock javascripts %}

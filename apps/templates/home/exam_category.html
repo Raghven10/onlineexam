@@ -1,0 +1,113 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} exam_category {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">  
+          {% if msg %}
+
+         <div class="alert alert-success alert-dismissible fade show col-4 float-right" role="alert">
+            <strong>{{msg}}</strong> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+
+          {% endif %}
+          
+          <div class="row align-items-center py-4">            
+           <form action="#" method="POST">         
+             {% csrf_token %}   
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="category_name">Category Name</label>
+                    <input type="text" id="category_name" name="category_name" class="form-control" placeholder="category_name">
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                   <div class="form-group">
+                    <label class="form-control-label" for="category_description">Category Description</label>
+                    <input type="text" id="category_description" name="category_description" class="form-control" placeholder="category_description">
+                  </div>
+                </div>
+
+              {% comment %} <input type="text" id="lastUpdatedBy" name="lastUpdatedBy" value="request.user.id" hidden />
+               <input type="date" id="lastUpdatedOn" name="lastUpdatedOn" hidden /> {% endcomment %}
+
+                <div class="col-lg-4">
+                 <label class="form-control-label">Add New Category</label>
+                 <button type="submit" class="btn btn-success">+ Add New</button>
+                </div> 
+              </div>            
+          </form>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+             <!-- Content area -->           
+
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Sl No</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Last Updated</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in categories%}
+                  <tr>
+                    <th scope="row">
+                     {{forloop.counter}}
+                    </th>
+                    <td>
+                      {{c.category_name}}
+                    </td>
+                    <td>
+                      {{c.category_description}}
+                    </td>
+                    <td>
+                      {{c.lastUpdatedOn}}
+                    </td>
+                    <td>
+                       <a class="btn btn-sm btn-icon-only text-danger" href="{% url 'delete_category' c.id %}" role="button"
+                                        aria-expanded="false">
+                                        <i class="fas fa-trash"></i>
+                                    </a>   
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+             <!-- Content area ends here-->
+          </div>
+        </div>
+      </div>
+
+      {% include "includes/footer.html" %}
+      
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+$(".alert").alert('close');
+{% endblock javascripts %}
