@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mathfilters',
-    'apps.home'  # Enable the inner home (home)
+    'apps.home', # Enable the inner home (home)
+   
 ]
 
 MIDDLEWARE = [
