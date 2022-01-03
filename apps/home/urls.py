@@ -34,7 +34,10 @@ urlpatterns = [
     # The Profile page
     path('update_profile', views.update_profile, name='update_profile'), 
 
-    path('agencies', views.agencies, name='agencies'),  
+    path('agencies', views.agencies, name='agencies'), 
+
+
+    path('exam', views.exam, name='exam'),  
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),

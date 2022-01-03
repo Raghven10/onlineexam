@@ -23,6 +23,13 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
+def exam(request):
+    context = {'segment': 'exam'}
+    
+    return render(request, "home/exam.html", context)
+
+
+@login_required(login_url="/login/")
 def agencies(request):
     context = {'segment': 'agencies'}
     form = ExamAgencyForm(request.POST or None)      
